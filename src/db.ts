@@ -1,8 +1,8 @@
 // src/db.ts
-import Database from "better-sqlite3";
+import Database from 'better-sqlite3';
 
 export function createInMemoryDb() {
-  const db = new Database(":memory:");
+  const db = new Database(':memory:');
   // create users table
   db.exec(`
     CREATE TABLE users (

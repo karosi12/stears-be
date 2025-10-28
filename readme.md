@@ -20,10 +20,14 @@ clone the repository then cd into the project folder run
 
 `npm run test:integration` For integration test
 
+`npm run format` For formatting code
+
+`npm run lint` For linting code
+
 Add/Update env.sample for new env key-value
 
 Note: Copy the sample.env file then create an .env file in the root directory of the project and paste the keys then add the values.
 
-### Resources
+### Documentation
 
 Work in progress

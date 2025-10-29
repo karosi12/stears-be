@@ -105,6 +105,7 @@ pipeline {
                 sh '''
                     export COMMIT_SHA=$(git rev-parse --short HEAD)
                     docker tag crud:latest ghcr.io/karosi12/stears-be:${COMMIT_SHA}
+                    echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u karosi12 --password-stdin
                     docker push ghcr.io/karosi12/stears-be:${COMMIT_SHA}
                     docker logout ghcr.io
                     echo "Docker image pushed: ghcr.io/karosi12/stears-be:${COMMIT_SHA}"

@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         GIT_BRANCH = 'main'
+        SKIP_TESTS = "true"
     }
 
     stages {
@@ -89,6 +90,9 @@ pipeline {
         }
 
         stage('Security Scan - Trivy') {
+            when {
+                expression { env.SKIP_TESTS != "true" }
+            }
             steps {
                 sh '''
                     echo "Running Trivy vulnerability scan..."

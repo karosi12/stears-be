@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'us-east-2'
         GIT_BRANCH = 'main'
     }
 
@@ -11,7 +10,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                     echo "Starting build for stears backend service..."
+                     echo "Start building docker image for stears backend service..."
                     '''
                 }
             }
@@ -34,11 +33,82 @@ pipeline {
             }
         }
 
-        stage('hello') {
+        stage('Format Codebase') {
             steps {
                 dir('stears-devops/be') {
-                    sh 'echo "hello"'
+                    sh '''
+                        npm run format
+                        echo "Format completed successfully."
+                    '''
                 }
+            }
+        }
+
+        stage('Lint Codebase') {
+            steps {
+                dir('stears-devops/be') {
+                    sh '''
+                        npm run lint
+                        echo "Linting completed successfully."
+                    '''
+                }
+            }
+        }
+
+        stage('Integration test') {
+            steps {
+                dir('stears-devops/be') {
+                    sh '''
+                        npm run test:integration
+                        echo "Integration test completed successfully."
+                    '''
+                }
+            }
+        }
+
+        stage('Unit test') {
+            steps {
+                dir('stears-devops/be') {
+                    sh '''
+                        npm run test:unit
+                        echo "Unit test completed successfully."
+                    '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('stears-devops/be') {
+                    sh '''
+                        docker build -t crud:latest .
+                        echo "Docker image built successfully: crud:latest"
+                    '''
+                }
+            }
+        }
+
+        stage('Security Scan - Trivy') {
+            steps {
+                sh '''
+                    echo "Running Trivy vulnerability scan..."
+                    trivy image --exit-code 1 --severity HIGH,CRITICAL crud:latest
+                '''
+            }
+        }
+
+        stage('Push Docker Image to GHCR') {
+            when {
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+            }
+            steps {
+                sh '''
+                    export COMMIT_SHA=$(git rev-parse --short HEAD)
+                    docker tag crud:latest ghcr.io/karosi12/stears-be:${COMMIT_SHA}
+                    docker push ghcr.io/karosi12/stears-be:${COMMIT_SHA}
+                    docker logout ghcr.io
+                    echo "Docker image pushed: ghcr.io/karosi12/stears-be:${COMMIT_SHA}"
+                '''
             }
         }
     }

@@ -27,7 +27,8 @@ pipeline {
                         sh '''
                         rm -rf stears-be || true
                         git clone --branch $GIT_BRANCH https://$GIT_USERNAME:$GIT_PASSWORD@github.com/karosi12/stears-be.git
-                        cd stears-be
+                        cd stears-be && npm install --legacy-peer-deps
+                        echo "Repository cloned and dependencies installed."
                         '''
                     }
                 }

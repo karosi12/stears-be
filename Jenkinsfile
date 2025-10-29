@@ -25,7 +25,7 @@ pipeline {
                 )]) {
                     script {
                         sh '''
-                        rm -rf stears-devops
+                        rm -rf stears-be || true
                         git clone --branch $GIT_BRANCH https://$GIT_USERNAME:$GIT_PASSWORD@github.com/karosi12/stears-be.git
                         cd stears-be
                         '''
@@ -36,7 +36,7 @@ pipeline {
 
         stage('Format Codebase') {
             steps {
-                dir('stears-devops/be') {
+                dir('stears-be') {
                     sh '''
                         npm run format
                         echo "Format completed successfully."
@@ -47,7 +47,7 @@ pipeline {
 
         stage('Lint Codebase') {
             steps {
-                dir('stears-devops/be') {
+                dir('stears-be') {
                     sh '''
                         npm run lint
                         echo "Linting completed successfully."
@@ -58,7 +58,7 @@ pipeline {
 
         stage('Integration test') {
             steps {
-                dir('stears-devops/be') {
+                dir('stears-be') {
                     sh '''
                         npm run test:integration
                         echo "Integration test completed successfully."
@@ -69,7 +69,7 @@ pipeline {
 
         stage('Unit test') {
             steps {
-                dir('stears-devops/be') {
+                dir('stears-be') {
                     sh '''
                         npm run test:unit
                         echo "Unit test completed successfully."
@@ -80,7 +80,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dir('stears-devops/be') {
+                dir('stears-be') {
                     sh '''
                         docker build -t crud:latest .
                         echo "Docker image built successfully: crud:latest"

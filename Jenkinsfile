@@ -118,5 +118,16 @@ pipeline {
                 '''
             }
         }
+        stage('Cleanup') {
+            steps {
+                sh '''
+                    docker rmi crud:latest || true
+                    docker rmi ghcr.io/karosi12/stears-be:${COMMIT_SHA} || true
+                    docker images
+                    rm -rf stears-be || true
+                    echo "Cleanup completed."
+                '''
+            }
+        } 
     }
 }

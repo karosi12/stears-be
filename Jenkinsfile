@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_BRANCH = 'main'
-        SKIP_TESTS = "true"
+        TRIVY_DISABLE_VEX_NOTICE = 'true'
         GITHUB_TOKEN = credentials('GHP_TOKEN')
     }
 

@@ -28,7 +28,7 @@ Add/Update env.sample for new env key-value
 
 Note: Copy the sample.env file then create an .env file in the root directory of the project and paste the keys then add the values.
 
-## 🧩 Jenkins CI/CD Pipeline for Stears Backend
+## Jenkins CI/CD Pipeline for Stears Backend
 
 This repository contains a **Jenkins declarative pipeline** that automates the build, test, security scanning, and deployment of the **Stears Backend Service**.
 
@@ -36,7 +36,7 @@ The pipeline ensures code quality, security, and consistent deployments using Do
 
 ---
 
-## 🏗️ Pipeline Overview
+## Pipeline Overview
 
 The pipeline consists of several well-defined stages to handle the complete CI/CD lifecycle:
 
@@ -55,7 +55,7 @@ The pipeline consists of several well-defined stages to handle the complete CI/C
 
 ---
 
-## ⚙️ Environment Variables
+## Environment Variables
 
 | Variable | Description |
 |-----------|-------------|
@@ -65,7 +65,7 @@ The pipeline consists of several well-defined stages to handle the complete CI/C
 
 ---
 
-## 🔑 Jenkins Credentials
+## Jenkins Credentials
 
 | ID | Type | Used For |
 |----|------|-----------|
@@ -74,7 +74,7 @@ The pipeline consists of several well-defined stages to handle the complete CI/C
 
 ---
 
-## 🚀 Running the Pipeline
+## Running the Pipeline
 
 ### Option 1: Run Manually in Jenkins UI
 1. Open Jenkins Dashboard.

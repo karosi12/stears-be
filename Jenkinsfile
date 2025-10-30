@@ -92,9 +92,6 @@ pipeline {
         }
 
         stage('Security Scan - Trivy') {
-            when {
-                expression { env.SKIP_TESTS != "true" }
-            }
             steps {
                 sh '''
                     echo "Running Trivy vulnerability scan..."
@@ -129,5 +126,13 @@ pipeline {
                 '''
             }
         } 
+    }
+    post {
+        failure {
+            echo "❌ Build failed. Review Trivy results for vulnerabilities."
+        }
+        success {
+            echo "✅ Build passed. No high/critical vulnerabilities found."
+        }
     }
 }

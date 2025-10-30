@@ -118,6 +118,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 sh '''
+                    export COMMIT_SHA=$(git rev-parse --short HEAD)
                     docker rmi crud:latest || true
                     docker rmi ghcr.io/karosi12/stears-be:${COMMIT_SHA} || true
                     docker images

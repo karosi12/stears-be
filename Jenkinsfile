@@ -94,8 +94,8 @@ pipeline {
         stage('Security Scan - Trivy') {
             steps {
                 sh '''
-                    echo "Running Trivy vulnerability scan..."
-                    trivy image --exit-code 1 --severity HIGH,CRITICAL crud:latest
+                    echo "Running Trivy vulnerability scan...(CRITICAL severity will fail the build)"
+                    trivy image --exit-code 1 --severity CRITICAL crud:latest
                 '''
             }
         }

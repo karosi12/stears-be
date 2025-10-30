@@ -14,6 +14,14 @@ pipeline {
                     sh '''
                      echo "Start building docker image for stears backend service..."
                     '''
+                    sh '''
+                        COMMIT_SHA=$(git rev-parse HEAD)
+                        curl -s -X POST \
+                            -H "Authorization: token $GITHUB_TOKEN" \
+                            -H "Content-Type: application/json" \
+                            -d '{"state": "pending", "description": "Build in progress", "context": "jenkins/ci"}' \
+                            https://api.github.com/repos/karosi12/stears-be/statuses/$COMMIT_SHA
+                    '''
                 }
             }
         }
@@ -131,9 +139,25 @@ pipeline {
     post {
         failure {
             echo "❌ Build failed. Review Trivy results for vulnerabilities."
+            sh '''
+                COMMIT_SHA=$(git rev-parse HEAD)
+                curl -s -X POST \
+                -H "Authorization: token $GITHUB_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d '{"state": "failure", "description": "Build failed", "context": "jenkins/ci"}' \
+                https://api.github.com/repos/karosi12/stears-be/statuses/$COMMIT_SHA
+            '''
         }
         success {
             echo "✅ Build passed. No high/critical vulnerabilities found."
+            sh '''
+                COMMIT_SHA=$(git rev-parse HEAD)
+                curl -s -X POST \
+                -H "Authorization: token $GITHUB_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d '{"state": "success", "description": "Build passed", "context": "jenkins/ci"}' \
+                https://api.github.com/repos/karosi12/stears-be/statuses/$COMMIT_SHA
+            '''
         }
     }
 }

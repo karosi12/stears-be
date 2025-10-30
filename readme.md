@@ -86,3 +86,8 @@ The pipeline consists of several well-defined stages to handle the complete CI/C
 Ensure your Jenkinsfile is in the repository root, then trigger:
 ```bash
 git push origin main
+```
+
+## To run the jenkins server as a docker container - optional
+Here is a gitgist to pull and run the docker image
+[jenkins-tf-docker-aws.sh](https://gist.github.com/karosi12/77ae16b257a726981caa55e3d999d354)

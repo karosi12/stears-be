@@ -1,6 +1,6 @@
 ## Backend service
 
-description here
+A simple a API CRUD
 
 ## Installation
 
@@ -28,6 +28,61 @@ Add/Update env.sample for new env key-value
 
 Note: Copy the sample.env file then create an .env file in the root directory of the project and paste the keys then add the values.
 
-### Documentation
+## 🧩 Jenkins CI/CD Pipeline for Stears Backend
 
-Work in progress
+This repository contains a **Jenkins declarative pipeline** that automates the build, test, security scanning, and deployment of the **Stears Backend Service**.
+
+The pipeline ensures code quality, security, and consistent deployments using Docker and GitHub Container Registry (GHCR).
+
+---
+
+## 🏗️ Pipeline Overview
+
+The pipeline consists of several well-defined stages to handle the complete CI/CD lifecycle:
+
+| Stage | Description |
+|--------|-------------|
+| **Init** | Starts the build process and initializes environment variables. |
+| **Clone Repo** | Authenticates with GitHub using stored credentials and clones the `main` branch of the `stears-be` repository. Installs dependencies via `npm ci`. |
+| **Format Codebase** | Runs Prettier (or configured formatter) to ensure code formatting consistency across the project. |
+| **Lint Codebase** | Executes ESLint to enforce coding standards and detect code issues. |
+| **Integration Test** | Runs integration test suites defined in `npm run test:integration`. Ensures all service components interact correctly. |
+| **Unit Test** | Runs unit tests defined in `npm run test:unit`. Validates individual functions and modules. |
+| **Build Docker Image** | Builds the backend Docker image (`crud:latest`) using the project’s `Dockerfile`. |
+| **Security Scan - Trivy** | Scans the built image with [Trivy](https://github.com/aquasecurity/trivy) for vulnerabilities. The build **fails if CRITICAL issues are found**. |
+| **Push Docker Image to GHCR** | Tags and pushes the successfully built image to **GitHub Container Registry** (`ghcr.io/karosi12/stears-be:<commit_sha>`). |
+| **Cleanup** | Removes temporary files, cloned repositories, and local Docker images to free up space on the Jenkins agent. |
+
+---
+
+## ⚙️ Environment Variables
+
+| Variable | Description |
+|-----------|-------------|
+| `GIT_BRANCH` | Git branch to clone (default: `main`) |
+| `TRIVY_DISABLE_VEX_NOTICE` | Disables Trivy vulnerability exceptions notice |
+| `GITHUB_TOKEN` | GitHub Personal Access Token (stored as Jenkins credential `GHP_TOKEN`) |
+
+---
+
+## 🔑 Jenkins Credentials
+
+| ID | Type | Used For |
+|----|------|-----------|
+| `github-pat` | Username + Password | GitHub repository access for cloning |
+| `GHP_TOKEN` | Secret Text | GitHub token for pushing Docker images to GHCR |
+
+---
+
+## 🚀 Running the Pipeline
+
+### Option 1: Run Manually in Jenkins UI
+1. Open Jenkins Dashboard.
+2. Select the pipeline job (e.g., `stears-backend-pipeline`).
+3. Click **Build Now**.
+4. Monitor progress in the console output.
+
+### Option 2: Run via Jenkinsfile
+Ensure your Jenkinsfile is in the repository root, then trigger:
+```bash
+git push origin main
